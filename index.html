@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesa Digital - Hub de Links</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /*
+     * VARIÁVEIS E PALETA DE CORES (W1 Direct)
+     */
+    :root {
+      color-scheme: light;
+      
+      /* Cores Principais */
+      --primary: #3e6a6d;
+      --primary-dark: #022028;
+      --primary-light: #5fded4;
+      
+      /* Status e Destaques */
+      --success: #2f7d6a;
+      --warning: #a8752a;
+      --danger: #b3564e;
+      
+      /* Tonalidades de Cinza / Superfície */
+      --gray-50: #ebf0f0;
+      --gray-100: #e2e8e8;
+      --gray-200: #d3e0df;
+      --gray-300: #afcecd;
+      --gray-500: #6d9899;
+      --gray-700: #3e6a6d;
+      --gray-900: #022028;
+      
+      /* Superfícies e Cards */
+      --surface: #ffffff;
+      --border: rgba(2, 32, 40, 0.14);
+      
+      /* Variáveis Legado Mapeadas */
+      --azul: var(--primary);
+      --verde: var(--success);
+      --fundo: var(--gray-50);
+      --card: var(--surface);
+      --texto: var(--primary-dark);
+      --borda: var(--border);
+    }
+
+    /* Suporte a Modo Escuro com alto contraste integral */
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --primary: #5fded4;
+      --primary-dark: #1f4148;
+      --primary-light: #5fded4;
+      --success: #5fded4;
+      --warning: #f0c05a;
+      --danger: #e8a09a;
+      
+      --gray-50: #022028;
+      --gray-100: #0a181c;
+      --gray-200: #1f4148;
+      --gray-300: #3e6a6d;
+      --gray-500: #84afaf;
+      --gray-700: #d3e0df; /* Texto secundário claro para alta legibilidade */
+      --gray-900: #ffffff; /* Texto principal totalmente branco */
+      
+      --surface: #0a181c;
+      --border: #1f4148;
+
+      --texto: #ffffff;
+    }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.5;
+      padding: 20px;
+      transition: background 0.18s ease, color 0.18s ease;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container { 
+      width: 100%;
+      max-width: 680px; 
+      margin: 0 auto; 
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* BOTÃO DE TEMA */
+    .topbar-actions {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .theme-btn {
+      background: var(--gray-200);
+      border: 1px solid var(--border);
+      color: var(--gray-900);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      width: auto;
+      margin-top: 0;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--primary);
+      background: var(--surface);
+    }
+
+    /* CABEÇALHO / PERFIL */
+    .profile {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary-dark);
+      border: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--primary-light);
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 20px rgba(2, 32, 40, 0.15);
+    }
+
+    .profile h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--gray-900);
+    }
+
+    .profile p {
+      color: var(--gray-700);
+      font-size: 13.5px;
+    }
+
+    /* MENU SUSPENSO (ACCORDION) */
+    .accordion-item {
+      width: 100%;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(2, 32, 40, 0.07);
+      transition: all 0.15s ease;
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--surface);
+      color: var(--gray-900);
+      border: none;
+      outline: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .accordion-header:hover {
+      background: var(--gray-100);
+    }
+
+    .accordion-header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .accordion-header-title i {
+      color: var(--primary-light);
+      font-size: 16px;
+    }
+
+    .accordion-header .chevron {
+      font-size: 12px;
+      color: var(--gray-500);
+      transition: transform 0.25s ease;
+    }
+
+    .accordion-item.active .chevron {
+      transform: rotate(180deg);
+      color: var(--primary-light);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 12px;
+      background: var(--gray-50);
+    }
+
+    .accordion-item.active .accordion-content {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* BOTÕES DE LINK */
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--gray-900);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 13.5px;
+      transition: all 0.15s ease;
+    }
+
+    .link-btn:hover {
+      border-color: var(--primary-light);
+      background: var(--surface);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(2, 32, 40, 0.08);
+    }
+
+    .link-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .link-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--primary);
+    }
+
+    .arrow-icon {
+      font-size: 11px;
+      color: var(--gray-500);
+      transition: transform 0.15s ease;
+    }
+
+    .link-btn:hover .arrow-icon {
+      color: var(--primary-light);
+      transform: translateX(3px);
+    }
+
+    footer {
+      margin-top: 30px;
+      color: var(--gray-700);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* REGRAS ESPECÍFICAS MODO ESCURO */
+    :root[data-theme="dark"] .accordion-header-title i,
+    :root[data-theme="dark"] .link-icon {
+      color: var(--primary-light) !important;
+    }
+
+    :root[data-theme="dark"] .accordion-header {
+      background: var(--surface) !important;
+      color: #ffffff !important;
+    }
+
+    :root[data-theme="dark"] .accordion-header:hover {
+      background: var(--gray-200) !important;
+    }
+
+    :root[data-theme="dark"] .link-btn {
+      background: var(--gray-100) !important;
+      color: #ffffff !important;
+      border-color: var(--border) !important;
+    }
+
+    :root[data-theme="dark"] .link-btn:hover {
+      border-color: var(--primary-light) !important;
+      background: var(--gray-200) !important;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .container { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Botão de Alternar Tema -->
+    <div class="topbar-actions">
+      <button class="theme-btn" id="themeToggleBtn">
+        <i class="fa-solid fa-sun" id="themeIcon"></i>
+        <span id="themeText">Modo Claro</span>
+      </button>
+    </div>
+
+    <!-- Cabeçalho / Perfil -->
+    <div class="profile">
+      <div class="avatar">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <h1>Mesa Digital</h1>
+      <p>Hub Central de Links, Sistemas e Processos</p>
+    </div>
+
+    <!-- 1. Cadastros XP -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Cadastros XP (A51376)</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://cadastro.xpi.com.br/v3/cadastro/nome?assessor=A51376" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-user-plus link-icon"></i>
+            <span>Abertura de Conta Pessoa Física (PF)</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://cadastro.xpempresas.com.br/cadastro/cnpj/?assessor=A51376" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-building link-icon"></i>
+            <span>Abertura de Conta Pessoa Jurídica (PJ)</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. Sistemas, Plataformas & Web Apps -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-laptop-code"></i>
+          <span>Sistemas, Plataformas & Web Apps</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://central-mesa-alocacao.vercel.app/" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-chart-pie link-icon"></i>
+            <span>Central da mesa de alocação</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://pr1sma.w1technology.com.br/auth/login" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-shield-halved link-icon"></i>
+            <span>Prisma</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://script.google.com/macros/s/AKfycbwy2Z6ZsT_xTRtHVS-8z6Hz2fbNX0qmanzaOStvRRfpGFOOoRb1a0urGMbfBIQEsv4/exec" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-bullhorn link-icon"></i>
+            <span>CRM de Campanhas</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://script.google.com/macros/s/AKfycbzzfUNb5IGwZ4J3dQPOHogO7HImt3_ylPRH60-WQs1kWsMuL1-UkkwCw92J1ElmUqq-/exec" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-users-gear link-icon"></i>
+            <span>CRM Base/Painel de Leads</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://w1nner.w1consultoria.com.br/painel-consultor/entrar" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-right-to-bracket link-icon"></i>
+            <span>Acesso ao W1nner</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3. Formulários -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-square-poll-vertical"></i>
+          <span>Formulários</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://krf1mvil.forms.app/ordensmesa-1" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-paper-plane link-icon"></i>
+            <span>Envio de Ordens Mesa de Operações</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://form.asana.com/?k=Zq4KvAH7qc3eyV5xp--aOQ&d=1203941553545765" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-triangle-exclamation link-icon"></i>
+            <span>Demandas Críticas (Mesa de Operações)</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://docs.google.com/forms/d/1ak4bGEHcx1PST2Fx6AJix4-gkdRadnukMejTPUtxbLA/viewform?edit_requested=true" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-user-plus link-icon"></i>
+            <span>Clientes novos Mesa</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://docs.google.com/forms/d/1mYLUcYSmSgRR06Nxtp5TJoekDVdcrOCPdWtjkeVHE6o/viewform?edit_requested=true" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-wrench link-icon"></i>
+            <span>Correções</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://docs.google.com/forms/d/1ZKQLwIfOVkjtmLgr00sBuvOSZ2lY4l2jxRc15rURp3s/viewform?edit_requested=true#response=ACYDBNhqleUmXBAr-YL84YNPld8ngjMuIayUyp3RXzoUytqleaPy0NP_sk6MbcvL2UqeP7o" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-right-left link-icon"></i>
+            <span>Portabilidade de Prev</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4. Processos -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Processos</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://central-mesa-alocacao.vercel.app/operacional" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-sliders link-icon"></i>
+            <span>Processos de STVM padrão</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://mellow-puma-512.notion.site/Dados-W1-Capital-1bb5d3f1a36c80c08c78d39d4e428727" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-circle-question link-icon"></i>
+            <span>Faqs W1 Capital</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://drive.google.com/drive/folders/13Qxuz7SHszgiYZCGrK7Pg9SwLeEXH-iF" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-folder-open link-icon"></i>
+            <span>Ferramentas operacionais (Drive)</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://drive.google.com/file/d/1RQgHeY1ex4p1fRGdRJQpQh1KNblPJriI/view" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-file-pdf link-icon"></i>
+            <span>Modelo de comissionamento</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 5. Indicações -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-share-nodes"></i>
+          <span>Indicações</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://conteudo.w1.com.br/w1-capital-indicacao-leads-assessoria" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-user-check link-icon"></i>
+            <span>Indicação de Leads para Capital</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://share.hsforms.com/2DMiK7-wcTjCWbwWZVTU7mwnv9zs" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-handshake link-icon"></i>
+            <span>Indicação de clientes para Consultoria</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://nv9zs.share.hsforms.com/2cEOyg9qaSmGXutXS6n6uog" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-shield-heart link-icon"></i>
+            <span>Consórcio/Plano de Saude e Seguros</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 6. Whatsapp Mesa -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Whatsapp Mesa</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://api.whatsapp.com/send?phone=5511954140012" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-brands fa-whatsapp link-icon"></i>
+            <span>WhatsApp Suporte Mesa Digital</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 7. Planilhas -->
+    <div class="accordion-item">
+      <button class="accordion-header">
+        <div class="accordion-header-title">
+          <i class="fa-solid fa-table"></i>
+          <span>Planilhas</span>
+        </div>
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-content">
+        <a href="https://docs.google.com/spreadsheets/d/1PNBO8kKPYDx4J5jMtf4srDxC4g0itLUjyAiKqrKnPMU/edit?gid=0#gid=0" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-address-book link-icon"></i>
+            <span>Telefone e e-mail consultores</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://docs.google.com/spreadsheets/d/1Yi-VSFkyyD8vOH_1lJ-of0nJ1SdWyJ0069jRJqj4Zdo/edit?gid=0#gid=0" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-trophy link-icon"></i>
+            <span>RECORDES / BÔNUS - MESA DIGITAL</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+        <a href="https://docs.google.com/spreadsheets/d/1wXqeeACpRpEAxa5QlQuXyWyYDP5xLudIbGeA_96PlcQ/edit?gid=0#gid=0" target="_blank" rel="noopener" class="link-btn">
+          <div class="link-content">
+            <i class="fa-solid fa-database link-icon"></i>
+            <span>Base atual Mesa</span>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      Mesa Digital &copy; Todos os direitos reservados.
+    </footer>
+
+  </div>
+
+  <script>
+    // Lógica para alternar o Tema (Dark / Light)
+    const htmlElement = document.documentElement;
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        htmlElement.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fa-solid fa-moon';
+        themeText.textContent = 'Modo Escuro';
+      } else {
+        htmlElement.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'fa-solid fa-sun';
+        themeText.textContent = 'Modo Claro';
+      }
+    });
+
+    // Lógica dos Menus Suspensos (Accordion)
+    document.querySelectorAll('.accordion-header').forEach(button => {
+      button.addEventListener('click', () => {
+        const accordionItem = button.parentElement;
+        const content = accordionItem.querySelector('.accordion-content');
+        const isActive = accordionItem.classList.contains('active');
+
+        // Fecha todas as categorias
+        document.querySelectorAll('.accordion-item').forEach(item => {
+          item.classList.remove('active');
+          item.querySelector('.accordion-content').style.maxHeight = null;
+        });
+
+        // Se não estava ativa, abre
+        if (!isActive) {
+          accordionItem.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
