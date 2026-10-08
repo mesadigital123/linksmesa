@@ -136,19 +136,15 @@
       margin-bottom: 32px;
     }
 
-    .avatar {
-      width: 80px;
-      height: 80px;
+    .avatar-img {
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      background: var(--primary-dark);
-      border: 2px solid var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: var(--primary-light);
+      object-fit: cover;
+      border: 3px solid var(--primary-light);
       margin: 0 auto 16px;
-      box-shadow: 0 4px 20px rgba(2, 32, 40, 0.15);
+      box-shadow: 0 4px 20px rgba(2, 32, 40, 0.25);
+      display: block;
     }
 
     .profile h1 {
@@ -335,9 +331,7 @@
 
     <!-- Cabeçalho / Perfil -->
     <div class="profile">
-      <div class="avatar">
-        <i class="fa-solid fa-chart-line"></i>
-      </div>
+      <img src="Gemini_Generated_Image_imyl0imyl0imyl0i.jpg" alt="Logo Mesa Digital" class="avatar-img">
       <h1>Mesa Digital</h1>
       <p>Hub Central de Links, Sistemas e Processos</p>
     </div>
